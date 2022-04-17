@@ -7,6 +7,7 @@ bl_info = {
 "name" : "PyBtnBox",
 "author" : "Ou Chiang",
 "version": (1, 0),
+"blender": (2, 80, 0),
 "location": "View3D > PyBtnBox",
 "description" : "Python Button Box",
 "category" : "3D View"
@@ -16,7 +17,7 @@ bl_info = {
 
 """"""""" Paths """""""""
 class Path:
-    root = os.path.dirname( os.path.abspath(__file__) )
+    root = os.path.dirname(os.path.abspath(__file__))
     pyFolders = root + '\\pyFolders\\'
     preset = root + '\\preset.json'
 
