@@ -6,11 +6,10 @@ import os
 bl_info = {
 "name" : "PyBtnBox",
 "author" : "Ou Chiang",
-"version": (0, 1, 1),
-"blender": (2, 80, 0),
-"location" : "View 3D",
+"version": (1, 0),
+"location": "View3D > PyBtnBox",
 "description" : "Python Button Box",
-"category" : "3D View"
+"category" : "OuTools"
 }
 
 
