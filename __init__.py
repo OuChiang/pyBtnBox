@@ -6,17 +6,18 @@ import os
 bl_info = {
 "name" : "PyBtnBox",
 "author" : "Ou Chiang",
-"version": (1, 0),
-"location": "View3D > PyBtnBox",
+"version": (0, 1, 1),
+"blender": (2, 80, 0),
+"location" : "View 3D",
 "description" : "Python Button Box",
-"category" : "OuTools"
+"category" : "3D View"
 }
 
 
 
 """"""""" Paths """""""""
 class Path:
-    root = os.path.normpath( os.path.join( os.path.dirname(os.path.abspath(__file__)) , '../PyBtnBox') )
+    root = os.path.normpath( os.path.join( os.path.dirname(os.path.abspath(__file__)) , '../pyBtnBox') )
     pyFolders = root + '\\pyFolders\\'
     preset = root + '\\preset.json'
 
