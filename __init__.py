@@ -249,7 +249,7 @@ class BB_Menu(bpy.types.PropertyGroup):
 #[panel] : [Button Box Panel]
 class BB_PT_mainPanel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
-    bl_label = "Py Button Panel"
+    bl_label = "pyBtnBox"
     bl_idname = "BB_PT"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
