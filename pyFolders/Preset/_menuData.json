@@ -1,6 +1,14 @@
 {
     "Preset": {
-        "text": "Add Suzanne ",
+        "text": "create something",
         "icon": "MONKEY"
+    },
+    "Append": {
+        "text": "append something ",
+        "icon": "MATERIAL_DATA"
+    },
+    "Read": {
+        "text": "read something",
+        "icon": "TEXT"
     }
 }
