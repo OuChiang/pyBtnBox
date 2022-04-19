@@ -67,7 +67,12 @@ pyBtnBox是一個可以快速創建按鈕櫃的小工具
 <img src="https://user-images.githubusercontent.com/69313227/163722687-173d6d6d-51a8-4712-a7ef-a89f625c4215.png" width="300"> 
 <img src="https://user-images.githubusercontent.com/69313227/163722818-7954bf5c-56bf-49b1-b2bc-8660e5deeca5.png" width="300"> 
 
+## 已知問題
+在Blender2.93及3.0，使用ImportHelper會無法回傳值而產生錯誤
 
+似乎是因為提升至python3.9所產生的錯誤
+
+到Blender3.1時已無出現此問題
 
 ## 作者
 [Ou-HisnChiang](https://github.com/OuChiang)
