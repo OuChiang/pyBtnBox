@@ -147,10 +147,6 @@ class BB_OT_pyFunction(bpy.types.Operator):
         spec = importlib.util.spec_from_file_location("module.name", self.File )
         foo = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(foo)
-        try:
-            foo.main()
-        except:
-            print('function failed')
         return {'FINISHED'}
 
 #[menu][func] : [ save setting ]
@@ -264,7 +260,6 @@ class BB_PT_mainPanel(bpy.types.Panel):
         Menu = context.scene.bb_menu
         try : folder = List.pyFolders[ int(Menu.BB_Menu) ]
         except : folder = List.pyFolders[0]
-        #folderPath = Path.pyFolder( folder )
         jsPath = Path.menuData( folder )
         
         row = layout.row()
