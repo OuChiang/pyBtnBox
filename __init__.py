@@ -31,7 +31,7 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
             is_errors = False
             if rootPath=='':
                 row = layout.row()
-                info_txt = 'For data security reasons, the root folder can only be set in a folder named \"pybtnbox_menus\"'
+                info_txt = 'For data security reasons, the root folder must be named start with \"pybtnbox_menus\"'
                 row.label(text=info_txt, icon='INFO')
                 return True
             if not dir_base_name.startswith('pybtnbox_menus'):
