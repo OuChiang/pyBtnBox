@@ -8,7 +8,7 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
     
     root_path : bpy.props.StringProperty(
         name="Example File Path",
-        default=r'D:\\pybtnbox_menus\\',
+        #default=r'D:\\pybtnbox_menus\\',
         subtype='DIR_PATH',
     )
 
@@ -34,10 +34,10 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
                 info_txt = 'For data security reasons, the root folder can only be set in a folder named \"pybtnbox_menus\"'
                 row.label(text=info_txt, icon='INFO')
                 return True
-            if dir_base_name !='pybtnbox_menus':
+            if not dir_base_name.startswith('pybtnbox_menus'):
                 row = layout.row()
                 row.alert=True
-                info_txt = 'The folder name must be \"pybtnbox_menus\"'
+                info_txt = 'The folder name must start with \"pybtnbox_menus\"'
                 row.label(text=info_txt, icon='ERROR')
                 is_errors = True
             if not os.path.exists(rootPath):

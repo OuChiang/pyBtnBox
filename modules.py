@@ -28,7 +28,7 @@ def get_script_folder_root():
     
     rootPath = getattr(addon_prefs,'root_path')
     dir_base_name = os.path.basename(os.path.dirname(rootPath))
-    if dir_base_name !='pybtnbox_menus':
+    if not dir_base_name.startswith('pybtnbox_menus'):
         return ''
     if not os.path.exists(rootPath):
         return ''
