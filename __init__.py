@@ -8,7 +8,7 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
     
     root_path : bpy.props.StringProperty(
         name="Example File Path",
-        #default=r'D:\\pybtnbox_menus\\',
+        default=r'D:\\pybtnbox_menus\\',
         subtype='DIR_PATH',
     )
 
@@ -47,7 +47,10 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
                 is_errors = True
             return is_errors
         if not check_is_error(layout):
-            row.label(text='Root Folder Path Fine', icon='CHECKMARK')
+            col = row.column(align=True)
+            col.label(text='Root Folder Path Fine', icon='CHECKMARK')
+            col.label(text='You can edit Menus/Buttons in :', icon='INFO')
+            col.label(text='Text_Editor > Sidebar > pyBtnBox Edit', icon='BLANK1')
 
         # Show Area
         Area_data = [
