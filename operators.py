@@ -37,7 +37,15 @@ class PYBTNBOX_OT_Btn_Execute(bpy.types.Operator):
     File : bpy.props.StringProperty(default="")
     
     def execute(self, context):
-        bpy.utils.execfile(filepath = self.File)
+        file_path = self.File
+        if os.path.isfile(file_path):
+            bpy.utils.execfile(filepath = file_path)
+            message = 'File Executed'
+            self.report({'OPERATOR'}, message)
+        else:
+            message = "File Not Found"
+            self.report({'ERROR'}, message)
+
         return {'FINISHED'}
 
 # Button Description
