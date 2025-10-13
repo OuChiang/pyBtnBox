@@ -146,7 +146,13 @@ class Menu:
                         'tip':btnData.get('tip',btnName),
                 }
                 continue
-
+        for fileName in not_in_list:
+            new_all_data[fileName] = {
+                'is_ui':False,
+                'icon':"BLANK1",
+                'text':btnName,
+                'tip':btnName,
+            }
         # output json
         json_data = json.dumps(new_all_data, indent=4)
         with open( jsonPath , 'w+') as f:
