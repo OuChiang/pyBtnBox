@@ -125,7 +125,7 @@ class Menu:
         
         not_in_list = [f for f in pyFiles if f not in old_all_keys]
         order_files = [f for f in old_all_keys if f in pyFiles]
-        order_files += not_in_list
+        
 
         for btnName,btnData in old_all_data.items():
             # If Button is UI Type
@@ -146,13 +146,13 @@ class Menu:
                         'tip':btnData.get('tip',btnName),
                 }
                 continue
-        for fileName in not_in_list:
-            new_all_data[fileName] = {
-                'is_ui':False,
-                'icon':"BLANK1",
-                'text':btnName,
-                'tip':btnName,
-            }
+        for btnName in not_in_list:
+                new_all_data[btnName] = {
+                        'is_ui':False,
+                        'icon':"BLANK1",
+                        'text':btnName,
+                        'tip':btnName,
+                }
         # output json
         json_data = json.dumps(new_all_data, indent=4)
         with open( jsonPath , 'w+') as f:
