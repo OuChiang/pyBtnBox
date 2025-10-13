@@ -292,6 +292,7 @@ class PYBTNBOX_PT_Editor_Button(bpy.types.Panel):
                 continue
             btnLO = Panel.Editor_btnLayout(
                                 name   = pyBtn,
+                                is_ui  = btnData.get('is_ui',True),
                                 text   = btnData.get('text',''),
                                 pyPath = os.path.join(Menu.menu_path,f'{pyBtn}.py'),
                                 icon   = btnData.get('icon','NONE'),

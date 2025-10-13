@@ -1,8 +1,6 @@
 import bpy
 from bpy_extras.io_utils import ImportHelper,ExportHelper
 import os
-#import importlib.util
-import importlib
 import shutil
 
 from . import modules
@@ -244,6 +242,8 @@ class PYBTNBOX_OT_Editor_Btn_Function_List_Add(bpy.types.Operator):
         layout.label(text='Button')
         layout.operator("pybtnbox.add_btn",text='Add New',icon='FILE_NEW')
         layout.operator("pybtnbox.editor_btn_load_to_text_editor",text='Add From Current Text',icon='TEXT')
+        layout.operator("pybtnbox.editor_layout_add",text='Add Layout',icon='ALIGN_LEFT')
+        
         
 # Add New
 class PYBTNBOX_OT_Editor_Btn_New(bpy.types.Operator):
@@ -315,19 +315,20 @@ class PYBTNBOX_OT_Editor_Btn_Get(bpy.types.Operator):
         BtnData = Data.get(self.Btn,None)
         if not BtnData:
             return {'FINISHED'}
-
-
+        
+        BtnIsUI = BtnData.get("is_ui",False)
+        BtnType = BtnData.get("type",0)
         BtnText = BtnData.get("text",'')
         BtnIcon = BtnData.get("icon",'NONE')
-        BtnType = BtnData.get("type",0)
         BtnTip  = BtnData.get("tip",'')
         btnEd = context.scene.pybtnbox_prop_editor
         btnEd.btn_get  =self.Btn
         btnEd.btn_name =self.Btn
-        btnEd.btn_type =str(BtnType)
         btnEd.btn_text =BtnText
         btnEd.btn_icon =BtnIcon
         btnEd.btn_tip  =BtnTip
+        btnEd.btn_is_ui = BtnIsUI
+        btnEd.btn_type =str(BtnType)
         btnEd.menu_del_bool = False
         btnEd.btn_del_bool = False
         return {'FINISHED'}
@@ -355,31 +356,34 @@ class PYBTNBOX_OT_Editor_Btn_Update(bpy.types.Operator):
 
         menuData = Menu.json
         newData = {}
-        for order,key in enumerate(menuData):
-            if key != Editor.btn_get:
-                newData[key] = {}
-                newData[key] = menuData[key]
+        for btnName,old_data in menuData.items():
+            # Is Other Btn
+            if btnName != Editor.btn_get:
+                newData[btnName] = old_data
+                continue
             
-            # Update
-            elif Editor.btn_get == Editor.btn_name: 
-                newData[key]={}
-                newData[key]['type']=Editor.get('btn_type',0)
-                newData[key]['text']=Editor.get('btn_text','')
-                newData[key]['icon']=Editor.get('btn_icon','NONE')
-                newData[key]['tip'] =Editor.get('btn_tip','')
-
-            
-            # When rename file
-            else: 
-                oldPyPath = os.path.join(Menu.menu_path,f'{Editor.btn_get}.py')#pyBtnBox.Path.pyfile(Menu,Editor.btn_get)
-                newPyPath = os.path.join(Menu.menu_path,f'{Editor.btn_name}.py')#pyBtnBox.Path.pyfile(Menu,Editor.btn_name)
+            # Update UI
+            if Editor.get('btn_is_ui'):
+                newData[btnName]={}
+                newData[btnName]['is_ui']=True
+                newData[btnName]['type']=Editor.get('btn_type',0)
+                newData[btnName]['text']=Editor.get('btn_text','')
+                newData[btnName]['icon']=Editor.get('btn_icon','NONE')
+                #newData[btnName]['tip'] =Editor.get('btn_tip','')
+                continue
+            # Update Btn
+            old_name = Editor.btn_get
+            new_name = Editor.btn_name
+            if old_name != new_name: 
+                oldPyPath = os.path.join(Menu.menu_path,f'{old_name}.py')
+                newPyPath = os.path.join(Menu.menu_path,f'{new_name}.py')
                 os.rename(oldPyPath,newPyPath)
-                newData[Editor.btn_name] = {}
-                newData[Editor.btn_name]['type']=Editor.get('btn_type',0)
-                newData[Editor.btn_name]['text']=Editor.get('btn_text','')
-                newData[Editor.btn_name]['icon']=Editor.get('btn_icon','NONE')
-                newData[Editor.btn_name]['tip'] =Editor.get('btn_tip','')
-        
+            newData[new_name] = {}
+            newData[new_name]['is_ui']=False
+            newData[new_name]['text']=Editor.get('btn_text','')
+            newData[new_name]['icon']=Editor.get('btn_icon','NONE')
+            newData[new_name]['tip'] =Editor.get('btn_tip','')
+
         import json
         json_data = json.dumps(newData, indent=4)
         with open( Menu.json_path , 'w+') as f:
@@ -445,7 +449,7 @@ class PYBTNBOX_OT_Editor_Btn_Function_List_Current(bpy.types.Operator):
         layout.label(text = 'Current Button')
         layout.operator( 'text.open' ,text='Load To Text Editor',icon= "APPEND_BLEND"  ).filepath  = self.button_path
         layout.operator( "pybtnbox.editor_btn_del" ,text='Remove',icon= "TRASH"  ).filepath  = self.button_path
-
+        
 # Button Delete
 class PYBTNBOX_OT_Editor_Btn_Del(bpy.types.Operator):
     """Delete This Button"""
@@ -475,6 +479,60 @@ class PYBTNBOX_OT_Editor_Btn_Del(bpy.types.Operator):
         row.label(text ='Are You Sure To Delete The Button?',icon="TRASH")
 
 
+# [ UI Btn ]
+# Add New
+class PYBTNBOX_OT_Editor_Layout_New(bpy.types.Operator):
+    """Add A New Layout Item"""
+    bl_idname = "pybtnbox.editor_layout_add"
+    bl_label = "Add A New Layout Item"
+
+    def execute(self, context):
+        Editor = context.scene.pybtnbox_prop_editor
+        Menu = PyBtnBox.Menu.from_menu_name(Editor.menu)
+        Data = Menu.json
+        Keys = Data.keys()
+        num = 0
+
+        item_name = f'{num}.ui_layout'
+        while item_name in Keys:
+            num+=1
+            item_name = f'{num}.ui_layout'
+        Data[item_name] = {
+                'is_ui':True,
+                'type':0,
+                'icon':"BLANK1",
+                'text':'',
+        }
+        # output json
+        import json
+        json_data = json.dumps(Data, indent=4)
+        with open( Menu.json_path , 'w+') as f:
+            f.write(json_data)
+        
+        #Menu.data_update()
+        return {'FINISHED'}
+
+# Delete
+class PYBTNBOX_OT_Editor_Layout_Del(bpy.types.Operator):
+    """Delete This Button"""
+    bl_idname = "pybtnbox.editor_layout_del"
+    bl_label = "Remove The Layout Item"
+    btn_name : bpy.props.StringProperty(default="")
+    '''
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+    '''
+    def execute(self, context):
+        Editor = context.scene.pybtnbox_prop_editor
+        Menu = PyBtnBox.Menu.from_menu_name(Editor.menu) 
+        Data = Menu.json
+        if self.btn_name in Data :
+            del Data[self.btn_name]
+        Menu.data_update()
+        Editor.btn_get=''
+        return {'FINISHED'}
+
 
 """"""""" Register """""""""
 class_list=[
@@ -503,11 +561,11 @@ class_list=[
     PYBTNBOX_OT_Editor_Btn_Function_List_Current,
     PYBTNBOX_OT_Editor_Btn_LoadToTextEditor,
     PYBTNBOX_OT_Editor_Btn_Del,
-
+    # [UI Btn]
+    PYBTNBOX_OT_Editor_Layout_New,
+    PYBTNBOX_OT_Editor_Layout_Del
     ]    
-#PYBTNBOX_OT_preference_usedSpace,
-#PYBTNBOX_OT_Editor_Settings_Function_List,
-#PYBTNBOX_OT_Editor_Menu_Function_List_Add,
+
 def register():
     for cls in class_list:
         bpy.utils.register_class(cls)

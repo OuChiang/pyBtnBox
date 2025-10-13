@@ -94,10 +94,16 @@ class Menu:
 
     def data_update(self):
         # Check dose json exist
-        if self.json_path =='': 
+        if '' in [self.root_path,self.menu_path]:
             return
+        if self.json_path =='': 
+            old_all_data ={}
+            jsonPath = os.path.join(self.menu_path,'_menuData.json')
+            return
+        else:
+            old_all_data = self.json
+            jsonPath = self.json_path
         
-        old_all_data = self.json
         # Menu Atrributes
         old_menu_attrs = old_all_data.get('__menuAttributes__',None)
         if not old_menu_attrs:
@@ -120,26 +126,30 @@ class Menu:
         not_in_list = [f for f in pyFiles if f not in old_all_keys]
         order_files = [f for f in old_all_keys if f in pyFiles]
         order_files += not_in_list
-        for pyFile in order_files:
-            old_btn_data = old_all_data.get( pyFile ,None)
-            if not old_btn_data:
-                new_all_data[pyFile] = {
-                    'type':0,
-                    'icon':"BLANK1",
-                    'text':pyFile,
-                    'tip':'',
+
+        for btnName,btnData in old_all_data.items():
+            # If Button is UI Type
+            if btnData.get('is_ui',False):
+                new_all_data[btnName] = {
+                        'is_ui':True,
+                        'type':btnData.get('type',0),
+                        'icon':btnData.get('icon',"BLANK1"),
+                        'text':btnData.get('text',btnName),
                 }
                 continue
-            new_all_data[pyFile] = {
-                    'type':old_btn_data.get('type',0),
-                    'icon':old_btn_data.get('icon',"BLANK1"),
-                    'text':old_btn_data.get('text',pyFile),
-                    'tip':old_btn_data.get('tip',''),
-            }
+            # If Button is already existed python file
+            if btnName in order_files:
+                new_all_data[btnName] = {
+                        'is_ui':btnData.get('btn_is_ui',False),
+                        'icon':btnData.get('icon',"BLANK1"),
+                        'text':btnData.get('text',btnName),
+                        'tip':btnData.get('tip',btnName),
+                }
+                continue
 
         # output json
         json_data = json.dumps(new_all_data, indent=4)
-        with open( self.json_path , 'w+') as f:
+        with open( jsonPath , 'w+') as f:
             f.write(json_data)
         return 'DONE'
     

@@ -11,7 +11,6 @@ def menu_search_filter(self,context,edit_text,menu_id):
         menu = PyBtnBox.Menu.from_menu_name(menuName) 
         if menu.area[menu_id]:
             output.append(menuName)
-    #output = [d for d in root.menu_list() if os.path.isdir( os.path.join(root.path,d))]
     return output
     
 # Properties
@@ -101,13 +100,13 @@ class PYBTNBOX_Prop_Editor(bpy.types.PropertyGroup):
     btn_tip: bpy.props.StringProperty(name="Btn Tip", 
                                        description="Reset The Button Tip", 
                                        default="")
+    btn_is_ui : bpy.props.BoolProperty(name="Btn Not UI", default=True)
     btn_type : bpy.props.EnumProperty(
         name="Btn Type", 
         description="Type For UILayout", 
-        items = [('0','button','','PLAY',0),
+        items = [('0','label','','SMALL_CAPS',0),
                  ('1','panel','','DOWNARROW_HLT',1),
-                 ('2','return','','FILE_PARENT',2),
-                 ('3','label','','SMALL_CAPS',3)],
+                 ('2','return','','FILE_PARENT',2),],
         default='0'
         )
 class_list = []
