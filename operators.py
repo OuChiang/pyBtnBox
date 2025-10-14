@@ -246,11 +246,13 @@ class PYBTNBOX_OT_Editor_Btn_Function_List_Add(bpy.types.Operator):
     
     def draw(self, context):
         layout = self.layout
+        layout.label(text='Add Button')
+        layout.operator("pybtnbox.add_btn",text='Empty Button',icon='FILE_NEW')
+        layout.operator("pybtnbox.editor_btn_load_to_text_editor",text='From Current Text',icon='TEXT')
+
         layout.separator(factor=1.0, type='LINE')
-        layout.label(text='Button')
-        layout.operator("pybtnbox.add_btn",text='Add New',icon='FILE_NEW')
-        layout.operator("pybtnbox.editor_btn_load_to_text_editor",text='Add From Current Text',icon='TEXT')
-        layout.operator("pybtnbox.editor_layout_add",text='Add Layout',icon='ALIGN_LEFT')
+        layout.label(text='Add Layout')
+        layout.operator("pybtnbox.editor_layout_add",text='New Layout',icon='ALIGN_LEFT')
         
         
 # Add New
