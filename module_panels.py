@@ -104,10 +104,11 @@ class btnLayout:
         if not layout:
             return
         row = layout.row(align = True)
-        icon = self.icon if self.icon in icon_in_blender else 'ERROR'
-        textBtn = row.operator("pybtnbox.button_description",text='',icon=icon,emboss=True)
-        textBtn.btnName =self.name
-        textBtn.text =self.tip
+        if self.icon != 'NONE':
+            icon = self.icon if self.icon in icon_in_blender else 'ERROR'
+            textBtn = row.operator("pybtnbox.button_description",text='',icon=icon,emboss=True)
+            textBtn.btnName =self.name
+            textBtn.text =self.tip
         row.operator("pybtnbox.button_execute" ,text= self.text).File = self.pyPath
 
         return 
@@ -201,10 +202,11 @@ class Editor_btnLayout:
             return
         row = layout.row(align = True)
         # icon
-        icon = self.icon if self.icon in icon_in_blender else 'ERROR'
-        textBtn = row.operator("pybtnbox.button_description",text='',icon=icon,emboss=True)
-        textBtn.btnName =self.name
-        textBtn.text =self.tip
+        if self.icon !='NONE':
+            icon = self.icon if self.icon in icon_in_blender else 'ERROR'
+            textBtn = row.operator("pybtnbox.button_description",text='',icon=icon,emboss=True)
+            textBtn.btnName =self.name
+            textBtn.text =self.tip
         # pick button
         self.btn_active(row,self.text,active)
         self.btn_operator(row)
