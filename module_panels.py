@@ -199,7 +199,7 @@ class Editor_btnLayout:
     def pn_edit_button(self,layout_tree,btnTreeLevel,Editor,active,btn_edit_area_func):
         layout = layout_tree[btnTreeLevel]
         if not layout:
-            return
+            return layout_tree,btnTreeLevel
         row = layout.row(align = True)
         # icon
         if self.icon !='NONE':
@@ -215,7 +215,7 @@ class Editor_btnLayout:
         # edit area
         if active:
             btn_edit_area_func(layout,Editor)
-        return 
+        return layout_tree,btnTreeLevel
     #0 label type
     def pn_edit_label(self,layout_tree,btnTreeLevel,Editor,active,btn_edit_area_func):
         layout = layout_tree[btnTreeLevel]
@@ -259,7 +259,8 @@ class Editor_btnLayout:
             return layout_tree,btnTreeLevel+1
         btn_panel = layout.panel(idname=self.name, default_closed=False)
         label_icon = self.icon if self.icon in icon_in_blender else "NONE"
-        btn_panel[0].label(text=self.text ,icon=label_icon)
+        label_text =self.text if self.text !='' else ' '
+        btn_panel[0].label(text=label_text ,icon=label_icon)
         self.btn_active(btn_panel[0],'',active)
         self.btn_operator(btn_panel[0])
         self.btn_order(btn_panel[0],self.name)
@@ -283,24 +284,21 @@ class Editor_btnLayout:
     #2 return type
     def pn_edit_end(self,layout_tree,btnTreeLevel,Editor,active,btn_edit_area_func):
         layout = layout_tree[btnTreeLevel]
-        if not layout : # in sub-panel and panel is closed
-            return layout_tree,btnTreeLevel
-        
-        row = layout.row(align = True)
-        row.label( text=' '  ,icon= "FILE_PARENT" )
-        self.btn_active(row,'',active)
-        self.btn_operator(row)
-        self.btn_order(row,self.name)
-        
+        if layout : # in sub-panel and panel is closed
+            row = layout.row(align = True)
+            row.label( text=' '  ,icon= "FILE_PARENT" )
+            self.btn_active(row,'',active)
+            self.btn_operator(row)
+            self.btn_order(row,self.name)
+            
         # edit area
         if active:
             btn_edit_area_func(layout,Editor)
 
-        if btnTreeLevel <0: # return one level when not on the top level
+        if btnTreeLevel >0: # return one level when not on the top level
             layout_tree.pop()
             btnTreeLevel -= 1
-        
-        btnTreeLevel = btnTreeLevel if btnTreeLevel==0 else btnTreeLevel-1
+        #btnTreeLevel = btnTreeLevel if btnTreeLevel==0 else btnTreeLevel-1
         return layout_tree,btnTreeLevel
     
 
