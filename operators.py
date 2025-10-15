@@ -379,7 +379,6 @@ class PYBTNBOX_OT_Editor_Btn_Update(bpy.types.Operator):
                 newData[btnName]['type']=Editor.get('btn_type',0)
                 newData[btnName]['text']=Editor.get('btn_text','')
                 newData[btnName]['icon']=Editor.get('btn_icon','NONE')
-                #newData[btnName]['tip'] =Editor.get('btn_tip','')
                 continue
             # Update Btn
             old_name = Editor.btn_get
@@ -416,7 +415,7 @@ class PYBTNBOX_OT_Editor_Btn_OrderWalk(bpy.types.Operator):
     def execute(self, context):
         Editor = context.scene.pybtnbox_prop_editor
         Menu = PyBtnBox.Menu.from_menu_name(Editor.menu)
-        menuData = Menu.json#pyBtnBox.Menu.get(folder)
+        menuData = Menu.json
         btnList = [ k for k in menuData.keys()]
         Index=0
         for i in range(len(btnList)):
@@ -518,8 +517,7 @@ class PYBTNBOX_OT_Editor_Layout_New(bpy.types.Operator):
         json_data = json.dumps(Data, indent=4)
         with open( Menu.json_path , 'w+') as f:
             f.write(json_data)
-        
-        #Menu.data_update()
+        Menu.data_update()
         return {'FINISHED'}
 
 # Delete
@@ -528,11 +526,7 @@ class PYBTNBOX_OT_Editor_Layout_Del(bpy.types.Operator):
     bl_idname = "pybtnbox.editor_layout_del"
     bl_label = "Remove The Layout Item"
     btn_name : bpy.props.StringProperty(default="")
-    '''
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
-    '''
+
     def execute(self, context):
         Editor = context.scene.pybtnbox_prop_editor
         Menu = PyBtnBox.Menu.from_menu_name(Editor.menu) 
