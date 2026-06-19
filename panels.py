@@ -198,13 +198,15 @@ class PYBTNBOX_PT_Editor_Menu(bpy.types.Panel):
     def draw(self, context):
         Editor = context.scene.pybtnbox_prop_editor
         MenuName = Editor.menu
+
         layout = self.layout
-        # If Not Found
-        if PyBtnBox.Root.path()=='':
+        Pref = context.preferences.addons[__package__].preferences
+        rootPathState = Pref.root_path_state()
+        if rootPathState != 'PATH_FINE':
             box = layout.box()
-            box.alignment='CENTER'
-            box.label(text='Not found root folder',icon='ERROR')
+            Pref.draw_root_path(box,rootPathState)
             return
+
         Menu = PyBtnBox.Menu.from_menu_name(Editor.menu)
         row = layout.row()
         Icon = Menu.icon if PyBtnBox.is_icon_in_blender(Menu.icon) else 'NONE'

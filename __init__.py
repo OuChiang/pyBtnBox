@@ -18,40 +18,53 @@ class PyBtnBox_Preferences(bpy.types.AddonPreferences):
         default=(True,True,True,True,True,True,True,
                  True,True,True,True,True,True,True)
         )
-    
+    def root_path_state(self):
+        rootPath = self.root_path
+        if rootPath=='':
+            return 'PATH_EMPTY'
+        if not os.path.exists(rootPath):
+            return 'FOLDER_NOT_FOUND'
+        dir_base_name = os.path.basename(os.path.dirname(rootPath))
+        if not dir_base_name.startswith('pybtnbox_menus'):
+            return 'FOLDER_NAME_WRONG'
+        return 'PATH_FINE'
+    def draw_root_path(self,layout,pathState):
+        layout.prop(self, "root_path",text='Root Folder Path')
+        col = layout.column(align=True)
+        row_pathState = col.row()
+        if pathState == 'PATH_EMPTY':
+            row_pathState.alert = True
+            row_pathState.label(text='Root Path Is Empty', icon='ERROR')
+            info_txt_1 = 'For data security reasons'
+            info_txt_2 = 'the root folder must be named start with \"pybtnbox_menus\"'
+            col.label(text=info_txt_1, icon='INFO')
+            col.label(text=info_txt_2, icon='BLANK1')
+
+        if pathState == 'FOLDER_NAME_WRONG':
+            row_pathState.alert = True
+            row_pathState.label(text='Folder Name Is Wrong', icon='ERROR')
+            info_txt_1 = 'For data security reasons'
+            info_txt_2 = 'the root folder must be named start with \"pybtnbox_menus\"'
+            col.label(text=info_txt_1, icon='INFO')
+            col.label(text=info_txt_2, icon='BLANK1')
+
+        if pathState == 'FOLDER_NOT_FOUND':
+            row_pathState.alert = True
+            row_pathState.label(text='The Folder Is Not Found', icon='ERROR')
+            col.label(text='The folder not found', icon='INFO')
+
+        if pathState == 'PATH_FINE':
+            row_pathState.alert = False
+            row_pathState.label(text='Root Path Is Fine', icon='CHECKMARK')
+            col.label(text='You can edit Menus/Buttons in :', icon='INFO')
+            col.label(text='Text_Editor > Sidebar > pyBtnBox Edit', icon='BLANK1')
+
     def draw(self, context):
         layout = self.layout
 
         # Root Path 
-        layout.prop(self, "root_path",text='Root Folder Path')
-        row = layout.row()
-        rootPath = self.root_path
-        dir_base_name = os.path.basename(os.path.dirname(rootPath))
-        def check_is_error(layout):
-            is_errors = False
-            if rootPath=='':
-                row = layout.row()
-                info_txt = 'For data security reasons, the root folder must be named start with \"pybtnbox_menus\"'
-                row.label(text=info_txt, icon='INFO')
-                return True
-            if not dir_base_name.startswith('pybtnbox_menus'):
-                row = layout.row()
-                row.alert=True
-                info_txt = 'The folder name must start with \"pybtnbox_menus\"'
-                row.label(text=info_txt, icon='ERROR')
-                is_errors = True
-            if not os.path.exists(rootPath):
-                row = layout.row()
-                row.alert=True
-                row.label(text='The folder not found', icon='ERROR')
-                is_errors = True
-            return is_errors
-        if not check_is_error(layout):
-            col = row.column(align=True)
-            col.label(text='Root Folder Path Fine', icon='CHECKMARK')
-            col.label(text='You can edit Menus/Buttons in :', icon='INFO')
-            col.label(text='Text_Editor > Sidebar > pyBtnBox Edit', icon='BLANK1')
-
+        pathState = self.root_path_state()
+        self.draw_root_path(layout,pathState)
         # Show Area
         Area_data = [
             ['3D Viewport','VIEW3D'],

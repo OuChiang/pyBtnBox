@@ -29,13 +29,18 @@ class MenuLayout:
         pybtnbox_prop = context.scene.pybtnbox_prop
         folderName = pybtnbox_prop.get(Menu_ID,'')
 
-        Menu = PyBtnBox.Menu.from_menu_name(folderName)
-        if Menu.root_path == '': # if get wrong Root path
+        layout = self.layout
+        
+        Pref = context.preferences.addons[__package__].preferences
+        rootPathState = Pref.root_path_state()
+        if rootPathState != 'PATH_FINE':
             box = layout.box()
-            box.label(text = 'Not Found Root Folder',icon='ERROR')
-            return 
+            Pref.draw_root_path(box,rootPathState)
+            return
+        
         
         # Menu Picker
+        Menu = PyBtnBox.Menu.from_menu_name(folderName)
         row_menu = layout.row(align=True)
         menuIcon = Menu.icon if Menu.icon in icon_in_blender else 'NONE'
         row_menu.prop(pybtnbox_prop,Menu_ID,text='',icon=menuIcon)
