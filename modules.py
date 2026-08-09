@@ -157,6 +157,7 @@ class Menu:
         json_data = json.dumps(new_all_data, indent=4)
         with open( jsonPath , 'w+') as f:
             f.write(json_data)
+        bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1) 
         return 'DONE'
     
     def get_pyFiles(self,mode):
