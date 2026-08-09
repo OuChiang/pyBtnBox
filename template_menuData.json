@@ -1,0 +1,45 @@
+{
+    "__menuAttributes__": {
+        "icon": "SCRIPT",
+        "area": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ]
+    },
+    "0.ui_layout": {
+        "is_ui": true,
+        "type": 1,
+        "text": "Panel_item",
+        "icon": "BLANK1"
+    },
+    "1.ui_layout": {
+        "is_ui": true,
+        "type": 0,
+        "text": "Text_item",
+        "icon": "BLANK1"
+    },
+    "newBtn_0": {
+        "is_ui": false,
+        "icon": "BLANK1",
+        "text": "newBtn_0",
+        "tip": "newBtn_0"
+    },
+    "2.ui_layout": {
+        "is_ui": true,
+        "type": 2,
+        "text": "return_item",
+        "icon": "BLANK1"
+    }
+}
